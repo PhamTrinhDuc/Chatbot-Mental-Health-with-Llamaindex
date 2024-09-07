@@ -1,0 +1,6 @@
+llama-index==0.11.4
+PyYAML
+plotly==5.24.0
+streamlit==1.38.0
+docx2txt==0.8
+python-dotenv==1.0.1

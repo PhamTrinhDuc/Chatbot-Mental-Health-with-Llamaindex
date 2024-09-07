@@ -1,0 +1,16 @@
+directories:
+  cache:
+    cache_file: data/cache/pipeline_cache.json
+    conversation_file: data/cache/conversation_cache.json
+  ingestion:
+    storage_path: data/ingestion_storage
+    data_path: data/ingestion_data
+  index:
+    index_storage: data/index_storage
+  user:
+    user_file_path: data/user_storage/users.json
+    scores_file_path: data/user_storage/scores.json
+  images:
+    logo_system_path: images/Logo.png
+    logo_user_path: images/user.png
+    logo_bot_path: images/professor.png
