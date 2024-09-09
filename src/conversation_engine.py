@@ -2,11 +2,13 @@ import os
 import json
 from datetime import datetime
 import streamlit as st
-from llama_index.core import load_index_from_storage, get_response_synthesizer
+from llama_index.core import load_index_from_storage, get_response_synthesizer, VectorStoreIndex
 from llama_index.core.storage import StorageContext
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.core.postprocessor import SimilarityPostprocessor
 from llama_index.core.retrievers import VectorIndexRetriever
+import chromadb
+from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.agent.openai import OpenAIAgent
@@ -24,7 +26,7 @@ def load_chat_history() -> SimpleChatStore:
     """
     Hàm để khởi tạo hoặc load lại lịch sử cuộc trò chuyện
     """
-    if os.path.join(CONVERSATION_FILE) and os.paht.getsize(CONVERSATION_FILE) > 0:
+    if os.path.join(CONVERSATION_FILE) and os.path.getsize(CONVERSATION_FILE) > 0:
         try:
             chat_history = SimpleChatStore.from_persist_path(CONVERSATION_FILE)
         except json.JSONDecodeError: 
@@ -80,8 +82,22 @@ def display_message(chat_store: SimpleChatStore, container, key: str) -> None:
                 with st.chat_message(message.role, avatar=PROFESSOR_AVT):
                     st.markdown(message.content)
             
+def create_retriever(nodes):
+    chroma_client = chromadb.EphemeralClient()
+    chroma_collection = chroma_client.create_collection("quickstart")
 
-def initlize_chatbot(chat_store: SimpleChatStore, container, username: str, user_infor) -> OpenAIAgent:
+    vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
+    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+
+    index = VectorStoreIndex(nodes, 
+                             storage_context=storage_context, 
+                             embed_model=APP_CONFIG.load_embedding_openai())
+    query_engine  = index.as_query_engine(llm=None,
+                                          similarity_top_k=3,
+                                          vector_store_query_node="hybrid")
+    return query_engine
+
+def initlize_chatbot(chat_store: SimpleChatStore, username: str, user_info: str) -> OpenAIAgent:
     
     """
     Xây dựng tool truy vấn từ cơ sở dữ liệu và tool lưu trữ kết quả chẩn đoán từ đó tạo agent để trò chuyện với người dùng.
@@ -95,12 +111,12 @@ def initlize_chatbot(chat_store: SimpleChatStore, container, username: str, user
     """
     
     memory = ChatMemoryBuffer(
-        chat_store, 
+        chat_store=chat_store, 
         token_limit=3000,
         chat_store_key=username)
     
     storage_context = StorageContext.from_defaults(
-        APP_CONFIG.index_storage
+        persist_dir=APP_CONFIG.index_storage
     )
     index = load_index_from_storage(storage_context, vector_id="vector")
     # dsm5_engine = index.as_query_engine(similarity_top_k=3)
@@ -108,36 +124,37 @@ def initlize_chatbot(chat_store: SimpleChatStore, container, username: str, user
 
     retriever = VectorIndexRetriever(
         index=index,
-        similarity_top_k=3
+        similarity_top_k=3,
     )
     response_synthetizer = get_response_synthesizer(
         response_mode="tree_summarize",
         verbose=False
     )
     post_process = SimilarityPostprocessor(similarity_cutoff=0.5)
-    query_engine = RetrieverQueryEngine(
+    dsm5_engine = RetrieverQueryEngine(
         retriever=retriever,
-        response_synthetizer=response_synthetizer,
+        response_synthesizer=response_synthetizer,
         node_postprocessors=[post_process]
     )
     dsm5_tool=QueryEngineTool(
-        query_engine=query_engine,
+        query_engine=dsm5_engine,
         metadata=ToolMetadata(
             name="DSM-5",
             description=(
-                f" Cung cấp các thông tin liên quan đến các bệnh ",
+                f" Cung cấp các thông tin liên quan đến các bệnh "
                 f"tâm thần theo tiêu chuẩn DSM5 . Sử dụng câu hỏi văn bản thuần túy chi tiết làm đầu vào cho công cụ"
             ),
         )
     )
 
     save_tool = FunctionTool.from_defaults(fn=save_score)
-    agent = OpenAIAgent(
-        tool=[dsm5_tool, save_tool],
+    agent = OpenAIAgent.from_tools(
+        tools=[dsm5_tool, save_tool],
         memory=memory,
-        system_name=CUSTORM_AGENT_SYSTEM_TEMPLATE.format(user_infor=user_infor),
+        system_prompt=CUSTORM_AGENT_SYSTEM_TEMPLATE.format(user_info=user_info),
+        verbose=True
     )
-    display_message(chat_store, container, key=username)
+    # display_message(chat_store, container, key=username)
     return agent
 
 

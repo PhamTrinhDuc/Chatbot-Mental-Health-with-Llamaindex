@@ -29,11 +29,6 @@ class LoadConfig:
         )
         creater_path(self.conversation_file)
 
-        self.storage_path = (
-            self.app_config['directories']['ingestion']['storage_path']
-        )
-        creater_path(self.storage_path)
-
         self.data_path = (
             self.app_config['directories']['ingestion']['data_path']
         )
@@ -66,6 +61,7 @@ class LoadConfig:
 
     def load_llm_openai(self) -> OpenAI:
         openai_llm = OpenAI(
+            # api_key=os.getenv('OPENAI_API_KEY'),
             model='gpt-4o-mini',
             temperature=0.2,
         )

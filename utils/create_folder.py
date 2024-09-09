@@ -3,7 +3,7 @@ import os
 
 def creater_path(path: str) -> None:
 
-    if path.endswith(('docx', 'txt', 'json')):
+    if path.endswith(('docx', 'txt', 'json', 'yaml')):
         folder_dir = os.path.dirname(path) # đường dẫn của các folder
         file_name = os.path.basename(path) # tên file
 

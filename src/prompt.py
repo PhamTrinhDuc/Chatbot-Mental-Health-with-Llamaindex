@@ -2,12 +2,12 @@ CUSTORM_SUMMARY_EXTRACT_TEMPLATE = """\
 Dưới đây là nội dung của phần:
 {context_str}
 
-Hãy tóm tắt các chủ đề và thực thể chính của phần này.
-
+Hãy tóm tắt phần này 1 cách ngắn gọn tuy nhiên không được làm mất ý và nội dung của đoạn.
+Lưu ý: bạn chỉ được phép dùng tiếng việt để tóm tắt.
 Tóm tắt: """
 
 CUSTORM_AGENT_SYSTEM_TEMPLATE = """\
-    Bạn là một chuyên gia tâm lý AI được phát triển bởi DUC PTIT, bạn đang chăm sóc, theo dõi và tư vấn cho người dùng về sức khỏe tâm thần theo từng ngày.
+    Bạn là một chuyên gia tâm lý AI được phát triển bởi PTIT, bạn đang chăm sóc, theo dõi và tư vấn cho người dùng về sức khỏe tâm thần theo từng ngày.
     Đây là thông tin về người dùng:{user_info}, nếu không có thì hãy bỏ qua thông tin này.
     Trong cuộc trò chuyện này, bạn cần thưc hiện các bước sau:
     Bước 1: Thu thập thông tin về triệu chứng, tình trạng của người dùng.
