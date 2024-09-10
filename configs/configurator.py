@@ -4,10 +4,13 @@ import yaml
 from llama_index.llms.openai import OpenAI
 from llama_index.embeddings.openai import OpenAIEmbedding
 from utils.create_folder import creater_path
-
+from src.prompt import PROMT_HEADER
+from llama_index.core import Settings
 
 dotenv.load_dotenv()
 os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
+os.environ['LLAMA_CLOUD_API_KEY'] = os.getenv("LLAMA_CLOUD_API_KEY")
+
 
 class LoadConfig:
     def __init__(self):
@@ -22,7 +25,6 @@ class LoadConfig:
         self.cache_file = (
             self.app_config['directories']['cache']['cache_file']
         )
-        creater_path(self.cache_file)
 
         self.conversation_file = (
             self.app_config['directories']['cache']['conversation_file']
@@ -61,14 +63,16 @@ class LoadConfig:
 
     def load_llm_openai(self) -> OpenAI:
         openai_llm = OpenAI(
-            # api_key=os.getenv('OPENAI_API_KEY'),
+            system_prompt=PROMT_HEADER,
             model='gpt-4o-mini',
             temperature=0.2,
         )
+        Settings.llm = openai_llm
         return openai_llm
 
     def load_embedding_openai(self) -> OpenAIEmbedding:
         openai_embedding = OpenAIEmbedding()
+        Settings.embed_model = openai_embedding
         return openai_embedding
     
 

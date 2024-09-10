@@ -1,16 +1,16 @@
 from src import ingest_documents
-from src import build_indexes
-from src import create_retriever
+# from src import build_indexes
+# from src import create_retriever
 import re 
 
 def main():
 
     # load data and run pipeline to get nodes =====================================
     nodes = ingest_documents()
-    print(nodes[0].text)
-    text = re.sub(r'\n', ' ', nodes[0].text.strip())
-    print(text)
-    print("=" * 100)
+    for node in nodes:
+        node.text = re.sub(r'\n', ' ', node.text.strip())
+
+    print(nodes[5].text)
 
     # indexing nodes into the database ============================================
     # vector_index = build_indexes(nodes)
@@ -18,9 +18,9 @@ def main():
     # response = query_engine.query("liêt kê các loại rối loạn giao tiếp")
     # print(response)
 
-    engine = create_retriever(nodes)
-    response = engine.query("có mấy loại rối loạn giao tiếp ngôn ngữ")
-    print(response)
+    # engine = create_retriever()
+    # response = engine.query("có mấy loại rối loạn giao tiếp ngôn ngữ")
+    # print(response)
 
     
     # initlize chatbot ============================================================
@@ -32,6 +32,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-    # llm = OpenAI()
-    # print(llm.complete("Rối loạn phát triển trí tuệ là gì ?"))

@@ -1,12 +1,13 @@
 import os
 from typing import List
+from llama_parse import LlamaParse
 from llama_index.core import SimpleDirectoryReader
 from llama_index.core.ingestion import IngestionCache, IngestionPipeline
-from llama_index.core.node_parser import SentenceSplitter, TokenTextSplitter
-from llama_index.core.extractors import TitleExtractor, QuestionsAnsweredExtractor
+from llama_index.core.node_parser import TokenTextSplitter
+from llama_index.core.extractors import TitleExtractor, QuestionsAnsweredExtractor, SummaryExtractor
 from llama_index.core.schema import TextNode
 from configs.configurator import APP_CONFIG
-from src.prompt import CUSTORM_SUMMARY_EXTRACT_TEMPLATE
+from src.prompt import CUSTORM_SUMMARY_EXTRACT_TEMPLATE, CUSTORM_TITLE_EXTRACT_TEMPLATE, CUSTORM_QUESTION_GEN_TMPL
 from log import set_logging_error, set_logging_terminal
 
 LOG_ERROR = set_logging_error()
@@ -19,15 +20,16 @@ def ingest_documents() -> List[TextNode]:
 
     input_files = [os.path.join(APP_CONFIG.data_path, file_name) 
                    for file_name in os.listdir(APP_CONFIG.data_path)]
+    # using larma_parse to extract text from pdf files
+    parser = LlamaParse(result_type="text")
+    file_extractor = {".pdf": parser}
+
     documents = SimpleDirectoryReader(
         input_files=input_files,
-        filename_as_id=True
+        filename_as_id=True,
+        file_extractor=file_extractor
     ).load_data()
 
-    text_splitter = SentenceSplitter(chunk_size=512, chunk_overlap=128)
-    nodes = text_splitter(documents) 
-
-    return nodes
 
     try:
         cached_hashes = IngestionCache.from_persist_path(
@@ -38,15 +40,17 @@ def ingest_documents() -> List[TextNode]:
         cached_hashes = ""
         LOG_ERROR.info("INGEST_PIPELINE.PY: Cache file not found. Running without cache...")
     
-    transformations = [
-        TokenTextSplitter(chunk_size=512, chunk_overlap=128),
-        TitleExtractor(nodes=5),
-        QuestionsAnsweredExtractor(questions=3),
-        EMBEDDING_MODEL
-    ]
-    
     pipeline = IngestionPipeline(
-        transformations=transformations,
+        transformations=[
+            TokenTextSplitter(
+                chunk_size=512, 
+                chunk_overlap=20
+            ),
+            SummaryExtractor(summaries=['self'], prompt_template=CUSTORM_SUMMARY_EXTRACT_TEMPLATE),
+            TitleExtractor(nodes=5, node_template=CUSTORM_TITLE_EXTRACT_TEMPLATE),
+            QuestionsAnsweredExtractor(questions=3, prompt_template=CUSTORM_QUESTION_GEN_TMPL),
+            EMBEDDING_MODEL
+        ],
         cache=cached_hashes
     )
 

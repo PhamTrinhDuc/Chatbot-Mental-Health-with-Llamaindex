@@ -1,13 +1,13 @@
 import os
 import json
-from datetime import datetime
 import streamlit as st
+import chromadb
+from datetime import datetime
 from llama_index.core import load_index_from_storage, get_response_synthesizer, VectorStoreIndex
 from llama_index.core.storage import StorageContext
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.core.postprocessor import SimilarityPostprocessor
 from llama_index.core.retrievers import VectorIndexRetriever
-import chromadb
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
@@ -15,7 +15,7 @@ from llama_index.agent.openai import OpenAIAgent
 from llama_index.core.storage.chat_store import SimpleChatStore
 from llama_index.core.tools import FunctionTool
 from configs.configurator import APP_CONFIG
-from src import CUSTORM_AGENT_SYSTEM_TEMPLATE
+from src.prompt import CUSTORM_AGENT_SYSTEM_TEMPLATE
 
 
 USER_AVT = APP_CONFIG.logo_user
@@ -82,20 +82,35 @@ def display_message(chat_store: SimpleChatStore, container, key: str) -> None:
                 with st.chat_message(message.role, avatar=PROFESSOR_AVT):
                     st.markdown(message.content)
             
-def create_retriever(nodes):
-    chroma_client = chromadb.EphemeralClient()
-    chroma_collection = chroma_client.create_collection("quickstart")
 
-    vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-    storage_context = StorageContext.from_defaults(vector_store=vector_store)
+def create_retriever() -> RetrieverQueryEngine:
+    # chroma_client = chromadb.EphemeralClient()
+    # chroma_collection = chroma_client.create_collection("quickstart")
 
-    index = VectorStoreIndex(nodes, 
-                             storage_context=storage_context, 
-                             embed_model=APP_CONFIG.load_embedding_openai())
-    query_engine  = index.as_query_engine(llm=None,
-                                          similarity_top_k=3,
-                                          vector_store_query_node="hybrid")
-    return query_engine
+    # vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
+    storage_context = StorageContext.from_defaults(persist_dir=APP_CONFIG.index_storage)
+                                                #    vector_store=vector_stores)
+
+    index = load_index_from_storage(storage_context=storage_context, vector_id="vector")
+    
+    retriever = VectorIndexRetriever(
+        index=index,
+        similarity_top_k=3,
+        vector_store_query_mode="hybrid"
+    )
+    response_synthetizer = get_response_synthesizer(
+        response_mode="tree_summarize",
+        verbose=False
+    )
+    post_process = SimilarityPostprocessor(similarity_cutoff=0.5)
+    dsm5_engine = RetrieverQueryEngine(
+        retriever=retriever,
+        response_synthesizer=response_synthetizer,
+        node_postprocessors=[post_process]
+
+    )
+    return dsm5_engine
+
 
 def initlize_chatbot(chat_store: SimpleChatStore, username: str, user_info: str) -> OpenAIAgent:
     
@@ -115,27 +130,7 @@ def initlize_chatbot(chat_store: SimpleChatStore, username: str, user_info: str)
         token_limit=3000,
         chat_store_key=username)
     
-    storage_context = StorageContext.from_defaults(
-        persist_dir=APP_CONFIG.index_storage
-    )
-    index = load_index_from_storage(storage_context, vector_id="vector")
-    # dsm5_engine = index.as_query_engine(similarity_top_k=3)
-
-
-    retriever = VectorIndexRetriever(
-        index=index,
-        similarity_top_k=3,
-    )
-    response_synthetizer = get_response_synthesizer(
-        response_mode="tree_summarize",
-        verbose=False
-    )
-    post_process = SimilarityPostprocessor(similarity_cutoff=0.5)
-    dsm5_engine = RetrieverQueryEngine(
-        retriever=retriever,
-        response_synthesizer=response_synthetizer,
-        node_postprocessors=[post_process]
-    )
+    dsm5_engine = create_retriever()
     dsm5_tool=QueryEngineTool(
         query_engine=dsm5_engine,
         metadata=ToolMetadata(
