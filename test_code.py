@@ -1,6 +1,6 @@
 from src import ingest_documents
-# from src import build_indexes
-# from src import create_retriever
+from src import build_indexes
+from src import create_retriever
 import re 
 
 def main():
@@ -10,13 +10,13 @@ def main():
     for node in nodes:
         node.text = re.sub(r'\n', ' ', node.text.strip())
 
-    print(nodes[5].text)
+    print(nodes[1].text)
 
     # indexing nodes into the database ============================================
-    # vector_index = build_indexes(nodes)
-    # query_engine = vector_index.as_query_engine()
-    # response = query_engine.query("liêt kê các loại rối loạn giao tiếp")
-    # print(response)
+    vector_index = build_indexes(nodes)
+    query_engine = vector_index.as_query_engine()
+    response = query_engine.query("liêt kê các loại rối loạn giao tiếp")
+    print(response)
 
     # engine = create_retriever()
     # response = engine.query("có mấy loại rối loạn giao tiếp ngôn ngữ")

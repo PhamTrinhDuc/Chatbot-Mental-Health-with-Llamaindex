@@ -14,7 +14,6 @@ Hãy extract ra những từ khóa chính, thực thể  hoặc những chủ đ
 Lưu ý: bạn chỉ được phép dùng tiếng việt để extract..
 Tóm tắt: """
 
-
 CUSTORM_QUESTION_GEN_TMPL = """\
 Đây là bối cảnh:
 {context_str}
@@ -28,6 +27,13 @@ mà bối cảnh này có thể trả lời.
 Lưu ý: bạn chỉ được sử dụng tiếng việt
 """
 
+LLAMA_PARSE_PROMPT = """
+Tài liệu được cung cấp là 1 sổ tay chứa các thông tin về các rối loạn tâm lý.
+Nó cung cấp các tiêu chí chẩn đoán chi tiết cho hàng trăm rối loạn tâm thần, từ những rối loạn phổ biến như trầm cảm và lo âu cho đến các rối loạn ít gặp hơn như rối loạn tâm thần phân liệt.
+Nó còn cung cấp thông tin về nguyên nhân, triệu chứng và ảnh hưởng của chúng đến cuộc sống hàng ngày
+
+Nhiệm vụ của bạn là hãy chia các phần trong tài liệu thành các phần nhỏ hơn, mỗi đoạn là 1 nội dung riêng biệt không đứt quãng.
+"""
 
 PROMT_HEADER = """
 Bạn là một trợ lý AI chuyên về sức khỏe tâm thần, được tạo ra để cung cấp thông tin, hỗ trợ và hướng dẫn liên quan đến các vấn đề sức khỏe tâm thần. Nhiệm vụ của bạn là:

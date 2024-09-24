@@ -29,7 +29,7 @@ def load_chat_history() -> SimpleChatStore:
     if os.path.join(CONVERSATION_FILE) and os.path.getsize(CONVERSATION_FILE) > 0:
         try:
             chat_history = SimpleChatStore.from_persist_path(CONVERSATION_FILE)
-        except json.JSONDecodeError: 
+        except json.JSONDecodeError:
             chat_history = SimpleChatStore()
     else:
         chat_history = SimpleChatStore()
@@ -89,14 +89,13 @@ def create_retriever() -> RetrieverQueryEngine:
 
     # vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
     storage_context = StorageContext.from_defaults(persist_dir=APP_CONFIG.index_storage)
-                                                #    vector_store=vector_stores)
+                                                #    vector_store=vector_store)
 
     index = load_index_from_storage(storage_context=storage_context, vector_id="vector")
     
     retriever = VectorIndexRetriever(
         index=index,
         similarity_top_k=3,
-        vector_store_query_mode="hybrid"
     )
     response_synthetizer = get_response_synthesizer(
         response_mode="tree_summarize",

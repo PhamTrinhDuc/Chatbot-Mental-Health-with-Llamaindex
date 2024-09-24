@@ -1,6 +1,6 @@
 
 <div align="center">
-<img src="images/Logo.png" alt="pipeline"/>
+<img src="./images/Logo.png" alt="pipeline"/>
 </div>
 
 <div align="center">

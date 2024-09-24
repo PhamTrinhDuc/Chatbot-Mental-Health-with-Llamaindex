@@ -67,14 +67,13 @@ class LoadConfig:
             model='gpt-4o-mini',
             temperature=0.2,
         )
-        Settings.llm = openai_llm
         return openai_llm
 
     def load_embedding_openai(self) -> OpenAIEmbedding:
         openai_embedding = OpenAIEmbedding()
-        Settings.embed_model = openai_embedding
         return openai_embedding
     
 
-    
 APP_CONFIG = LoadConfig()
+Settings.llm = APP_CONFIG.load_llm_openai()
+Settings.embed_model = APP_CONFIG.load_embedding_openai()

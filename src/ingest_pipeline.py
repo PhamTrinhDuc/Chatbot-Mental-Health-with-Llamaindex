@@ -7,7 +7,12 @@ from llama_index.core.node_parser import TokenTextSplitter
 from llama_index.core.extractors import TitleExtractor, QuestionsAnsweredExtractor, SummaryExtractor
 from llama_index.core.schema import TextNode
 from configs.configurator import APP_CONFIG
-from src.prompt import CUSTORM_SUMMARY_EXTRACT_TEMPLATE, CUSTORM_TITLE_EXTRACT_TEMPLATE, CUSTORM_QUESTION_GEN_TMPL
+from src.prompt import (
+    CUSTORM_SUMMARY_EXTRACT_TEMPLATE, 
+    CUSTORM_TITLE_EXTRACT_TEMPLATE, 
+    CUSTORM_QUESTION_GEN_TMPL,
+    LLAMA_PARSE_PROMPT
+)
 from log import set_logging_error, set_logging_terminal
 
 LOG_ERROR = set_logging_error()
@@ -21,7 +26,8 @@ def ingest_documents() -> List[TextNode]:
     input_files = [os.path.join(APP_CONFIG.data_path, file_name) 
                    for file_name in os.listdir(APP_CONFIG.data_path)]
     # using larma_parse to extract text from pdf files
-    parser = LlamaParse(result_type="text")
+    parser = LlamaParse(result_type="text",
+                        parsing_instruction=LLAMA_PARSE_PROMPT)
     file_extractor = {".pdf": parser}
 
     documents = SimpleDirectoryReader(
@@ -29,7 +35,6 @@ def ingest_documents() -> List[TextNode]:
         filename_as_id=True,
         file_extractor=file_extractor
     ).load_data()
-
 
     try:
         cached_hashes = IngestionCache.from_persist_path(
