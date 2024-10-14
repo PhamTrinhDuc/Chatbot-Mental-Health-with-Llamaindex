@@ -1,5 +1,5 @@
 import streamlit as st
-from configs.configurator import APP_CONFIG
+from configs.config import APP_CONFIG
 
 def show_sidebar():
     st.sidebar.image(APP_CONFIG.logo_system, use_column_width=True)

@@ -1,4 +1,4 @@
 from .ingest_pipeline import ingest_documents
 from .index_builder import build_indexes
 from .conversation_engine import initlize_chatbot, chat_interface, load_chat_history, create_retriever
-from .prompt import CUSTORM_SUMMARY_EXTRACT_TEMPLATE, CUSTORM_TITLE_EXTRACT_TEMPLATE, CUSTORM_AGENT_SYSTEM_TEMPLATE, PROMT_HEADER
+from .prompt import CUSTORM_SUMMARY_EXTRACT_TEMPLATE, CUSTORM_TITLE_EXTRACT_TEMPLATE, CUSTORM_AGENT_SYSTEM_TEMPLATE

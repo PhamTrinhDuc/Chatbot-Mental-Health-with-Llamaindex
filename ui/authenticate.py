@@ -3,11 +3,11 @@ from typing import List, Dict
 import yaml
 import hashlib
 import os
-from configs.configurator import APP_CONFIG
+from configs.config import APP_CONFIG
 
 USERS_FILE = APP_CONFIG.user_file_path
 
-def load_user_data() -> Dict[str: Dict[str, str]]:
+def load_user_data():
     """
     Hàm để load thông tin người dùng từ file yaml
     """

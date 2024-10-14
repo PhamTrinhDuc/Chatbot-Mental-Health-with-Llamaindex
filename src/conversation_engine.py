@@ -14,7 +14,7 @@ from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.agent.openai import OpenAIAgent
 from llama_index.core.storage.chat_store import SimpleChatStore
 from llama_index.core.tools import FunctionTool
-from configs.configurator import APP_CONFIG
+from configs.config import APP_CONFIG
 from src.prompt import CUSTORM_AGENT_SYSTEM_TEMPLATE
 
 

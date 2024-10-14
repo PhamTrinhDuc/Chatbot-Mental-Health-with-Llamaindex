@@ -10,7 +10,7 @@ def main():
         st.session_state.logged_in = False
 
     if not st.session_state.logged_in:
-        with st.expander('AIO MENTAL HEALTH', expanded=True):
+        with st.expander('PTIT MENTAL HEALTH', expanded=True):
             login_tab, create_tab, guest_tab = st.tabs(
                 [
                     "Đăng nhập",
@@ -38,3 +38,5 @@ def main():
         st.success(f'Chào mừng {st.session_state.username}, hãy khám phá các tính năng của ứng dụng chăm sóc sức khỏe tinh thần nhé!', icon="🎉")
 if __name__ == "__main__":
     main()
+
+    

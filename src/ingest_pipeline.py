@@ -6,7 +6,7 @@ from llama_index.core.ingestion import IngestionCache, IngestionPipeline
 from llama_index.core.node_parser import TokenTextSplitter
 from llama_index.core.extractors import TitleExtractor, QuestionsAnsweredExtractor, SummaryExtractor
 from llama_index.core.schema import TextNode
-from configs.configurator import APP_CONFIG
+from configs.config import APP_CONFIG
 from src.prompt import (
     CUSTORM_SUMMARY_EXTRACT_TEMPLATE, 
     CUSTORM_TITLE_EXTRACT_TEMPLATE, 
@@ -14,7 +14,6 @@ from src.prompt import (
     LLAMA_PARSE_PROMPT
 )
 from log import LOG_TERMINAL, LOG_ERROR
-
 EMBEDDING_MODEL = APP_CONFIG.load_embedding_openai()
 CACHE_FILE = APP_CONFIG.cache_file
 

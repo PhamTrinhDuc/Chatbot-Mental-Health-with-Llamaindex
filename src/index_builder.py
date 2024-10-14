@@ -2,7 +2,7 @@ from typing import List
 from llama_index.core.schema import TextNode
 from llama_index.core import VectorStoreIndex, load_index_from_storage
 from llama_index.core import StorageContext
-from configs.configurator import APP_CONFIG
+from configs.config import APP_CONFIG
 from log import LOG_TERMINAL, LOG_ERROR
 
 def build_indexes(nodes: List[TextNode]) -> VectorStoreIndex:
