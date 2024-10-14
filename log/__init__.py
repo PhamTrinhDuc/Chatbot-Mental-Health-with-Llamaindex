@@ -1,1 +1,1 @@
-from .logger import set_logging_error , set_logging_terminal
+from .logger import LOG_ERROR, LOG_TERMINAL

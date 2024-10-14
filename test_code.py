@@ -1,6 +1,5 @@
 from src import ingest_documents
 from src import build_indexes
-from src import create_retriever
 import re 
 
 def main():
@@ -15,7 +14,7 @@ def main():
     # indexing nodes into the database ============================================
     vector_index = build_indexes(nodes)
     query_engine = vector_index.as_query_engine()
-    response = query_engine.query("liêt kê các loại rối loạn giao tiếp")
+    response = query_engine.query("rối loạn ngôn ngữ")
     print(response)
 
     # engine = create_retriever()

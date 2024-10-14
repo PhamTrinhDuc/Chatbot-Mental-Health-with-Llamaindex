@@ -35,3 +35,6 @@ def set_logging_terminal():
     logger.addHandler(file_handler)
 
     return logger
+
+LOG_ERROR = set_logging_error()
+LOG_TERMINAL = set_logging_terminal()

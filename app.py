@@ -1,33 +1,40 @@
-from llama_index.core import SimpleDirectoryReader
-from llama_index.core.node_parser import SentenceSplitter
-from configs.configurator import APP_CONFIG
-import chromadb
-from llama_index.core.storage import StorageContext
-from llama_index.core import VectorStoreIndex
-from llama_index.vector_stores.chroma import ChromaVectorStore
-from llama_index.core import Settings
+import streamlit as st
+from ui.authenticate import login, register, guest_login
+import ui.sidebar as sidebar
 
-documents = SimpleDirectoryReader(
-    "data/ingestion_data",
-    filename_as_id=True
-).load_data()
+def main():
+    sidebar.show_sidebar()
+    
+    # Giao diện đăng nhập
+    if 'logged_in' not in st.session_state:
+        st.session_state.logged_in = False
 
-text_splitter = SentenceSplitter(chunk_size=512, chunk_overlap=128)
-nodes = text_splitter(documents) 
-
-
-chroma_client = chromadb.EphemeralClient()
-chroma_collection = chroma_client.create_collection("quickstart")
-
-vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-storage_context = StorageContext.from_defaults(vector_store=vector_store)
-
-index = VectorStoreIndex(nodes, 
-                            storage_context=storage_context, 
-                            embed_model=APP_CONFIG.load_embedding_openai())
-query_engine  = index.as_query_engine(similarity_top_k=3,
-                                    vector_store_query_node="hybrid")
-
-
-response = query_engine.query("giao tiếp ngôn ngữ")
-print(response)
+    if not st.session_state.logged_in:
+        with st.expander('AIO MENTAL HEALTH', expanded=True):
+            login_tab, create_tab, guest_tab = st.tabs(
+                [
+                    "Đăng nhập",
+                    "Tạo tài khoản",
+                    "Khách"
+                ]
+            )
+            with create_tab:
+                register()
+            with login_tab:
+                login()
+            with guest_tab:
+                guest_login()
+    else:
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            st.image("./images/chat.jpeg")
+            if st.button("Nói chuyện với chuyên gia tâm lý AI"):
+                st.switch_page("pages/2_💬_Chat.py")
+        with col2:
+            st.image("./images/chart.jpeg")
+            if st.button("Theo dõi thông tin sức khỏe của bạn"):
+                st.switch_page("pages/1_📈_user.py")
+        st.success(f'Chào mừng {st.session_state.username}, hãy khám phá các tính năng của ứng dụng chăm sóc sức khỏe tinh thần nhé!', icon="🎉")
+if __name__ == "__main__":
+    main()
