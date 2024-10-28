@@ -2,19 +2,21 @@ import os
 import json
 import streamlit as st
 import pandas as pd
+import datetime
 import plotly.graph_objects as go
+from ui import sidebar
 from configs.config import APP_CONFIG
 
 st.set_page_config(layout="wide")
 
 # doc du lieu tu file json
-def load_scores(file: str, spedific_username: str):
+def load_scores(file: str, spesific_username: str):
     if os.path.exists(file) and os.path.getsize(file) > 0:
         with open(file, 'r') as f:
             data = json.load(f)
 
         df = pd.DataFrame(data)
-        new_df = df[df['username']] == spedific_username
+        new_df = df[df['username']] == spesific_username
         return new_df
     else:
         return pd.DataFrame(columns=['username', 'Time', 'Score', 'Content', 'Total Guess'])
@@ -80,4 +82,43 @@ def plot_scores(df: pd.DataFrame):
     st.plotly_chart(fig)
 
 def main():
-    pass
+    sidebar.show_sidebar()
+
+    if "logged_in" not in st.session_state:
+        st.session_state.logged_in = False
+    
+    if st.session_state.logged_in:
+        st.markdown("# Theo dõi thông tin sức khỏe của bạn")
+
+        df  = load_scores(file=APP_CONFIG.scores_file_path, 
+                          spesific_username=st.session_state.user_name)
+
+        if not df.empty:
+            df['Time'] = pd.to_datetime(df['Time'])
+            df['Score_num'] = df['Score'].apply(score_to_numeric)
+            df['Score'] = df['Score'].str.lower()
+            st.markdown("## Biểu đồ sức khỏe tinh thần 7 ngày qua của bạn")
+            plot_scores(df)
+
+        st.markdown("## Truy xuất thông tin sức khỏe tinh thần theo ngày")
+        date = st.date_input("Chọn ngày", datetime.now().date())
+        selected_date = pd.to_datetime(date)
+
+        if not df.empty:
+            filtered_df = [df['Time'].dt.date == selected_date.date()]
+            if not filtered_df.empty:
+                st.write(f"Thông tin ngày {selected_date.date()}:")
+                for index, row in filtered_df.iterrows():
+                    st.markdown(f"""
+                    **Thời gian:** {row['Time']}  
+                    **Điểm:** {row['Score']}  
+                    **Nội dung:** {row['Content']}  
+                    **Tổng dự đoán:** {row['Total guess']}  
+                    """)
+            else:
+                st.write(f"Không có dữ liệu cho ngày {selected_date.date()}")
+        st.markdown("## Bảng dữ liệu chi tiết")
+        st.table(df)    
+
+if __name__ == "__main__":
+    main()
