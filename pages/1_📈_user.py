@@ -2,9 +2,7 @@ import os
 import json
 import streamlit as st
 import pandas as pd
-from datetime import datetime
 import plotly.graph_objects as go
-from ui.sidebar import show_sidebar
 from configs.config import APP_CONFIG
 
 st.set_page_config(layout="wide")

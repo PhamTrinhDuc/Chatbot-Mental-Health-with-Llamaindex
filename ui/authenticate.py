@@ -12,10 +12,10 @@ def load_user_data():
     Hàm để load thông tin người dùng từ file yaml
     """
     if os.path.exists(USERS_FILE) and os.path.getsize(USERS_FILE) > 0:
-        with open(APP_CONFIG.user_data_path, "r") as f:
+        with open(USERS_FILE, "r") as f:
             user_data = yaml.safe_load(f)
     else:
-        user_data = {"usernames": {}}
+        user_data = {"username": {}}
     return user_data
 
 # luu thong tin nguoi dung vao file yaml
@@ -52,9 +52,9 @@ def register():
 
         if st.form_submit_button("Đăng ký"):
             users = load_user_data()
-            if len(users['username'] >= 5):
+            if len(users.get("username", [])) >= 10:
                 st.error("Số lượng người dùng đạt mức giới hạn đăng kí!!")
-            elif not username or password:
+            elif not username or not password:
                 st.error("Tên tài khoản và mật khẩu không được để trống")
             elif password == confirm_password:
                 if username in users['username']:

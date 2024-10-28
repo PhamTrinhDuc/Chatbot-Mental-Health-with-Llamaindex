@@ -1,14 +1,13 @@
 import os
 import json
 import streamlit as st
-import chromadb
 from datetime import datetime
 from llama_index.core import load_index_from_storage, get_response_synthesizer, VectorStoreIndex
 from llama_index.core.storage import StorageContext
 from llama_index.core.query_engine import RetrieverQueryEngine
 from llama_index.core.postprocessor import SimilarityPostprocessor
 from llama_index.core.retrievers import VectorIndexRetriever
-from llama_index.vector_stores.chroma import ChromaVectorStore
+# from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core.memory import ChatMemoryBuffer
 from llama_index.core.tools import QueryEngineTool, ToolMetadata
 from llama_index.agent.openai import OpenAIAgent
@@ -160,17 +159,17 @@ def chat_interface(agent: OpenAIAgent, chat_store: SimpleChatStore, container) -
         - chat_store: Lưu trữ cuộc trò chuyện
         - container: Container để hiển thị cuộc trò chuyện
     """
-    if not os.path.join(os.path.exists(CONVERSATION_FILE) or os.path.getsize(CONVERSATION_FILE) == 0):
+    if not os.path.exists(CONVERSATION_FILE) or os.path.getsize(CONVERSATION_FILE) == 0:
         with container:
             with st.chat_message(name="assistant", avatar=PROFESSOR_AVT):
-                st.markdown("Chào bạn, mình là Chatbot MENTHAL HEALTH được phát triển bởi DUC PTIT. Mình sẽ giúp bạn chăm sóc sức khỏe tinh thần. Hãy cho mình biết tình trạng của bạn hoặc bạn có thể trò chuyện với mình nhé!")
+                st.markdown("Chào bạn, mình là Chatbot MENTHAL HEALTH được phát triển bởi PTIT. Mình sẽ giúp bạn chăm sóc sức khỏe tinh thần. Hãy cho mình biết tình trạng của bạn hoặc bạn có thể trò chuyện với mình nhé!")
     
     user_input = st.text_input("Nhập tin nhắn của bạn tại đây...",)
     if user_input:
         with container:
             with st.chat_message(name="user", avatar=USER_AVT):
                 st.markdown(user_input)
-            response = str(agent(user_input))
+            response = str(agent.chat(user_input))
             with st.chat_message(name="assistant", avatar=PROFESSOR_AVT):
                 st.markdown(response)
         chat_store.persist(CONVERSATION_FILE)
