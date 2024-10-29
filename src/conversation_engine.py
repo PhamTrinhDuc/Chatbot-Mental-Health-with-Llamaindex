@@ -110,7 +110,7 @@ def create_retriever() -> RetrieverQueryEngine:
     return dsm5_engine
 
 
-def initlize_chatbot(chat_store: SimpleChatStore, username: str, user_info: str) -> OpenAIAgent:
+def initlize_chatbot(chat_store: SimpleChatStore, container, username: str, user_info: str) -> OpenAIAgent:
     
     """
     Xây dựng tool truy vấn từ cơ sở dữ liệu và tool lưu trữ kết quả chẩn đoán từ đó tạo agent để trò chuyện với người dùng.
@@ -147,7 +147,7 @@ def initlize_chatbot(chat_store: SimpleChatStore, username: str, user_info: str)
         system_prompt=CUSTORM_AGENT_SYSTEM_TEMPLATE.format(user_info=user_info),
         verbose=True
     )
-    # display_message(chat_store, container, key=username)
+    display_message(chat_store, container, key=username)
     return agent
 
 
