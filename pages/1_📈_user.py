@@ -2,7 +2,7 @@ import os
 import json
 import streamlit as st
 import pandas as pd
-import datetime
+from datetime import datetime
 import plotly.graph_objects as go
 from ui import sidebar
 from configs.config import APP_CONFIG
@@ -83,15 +83,13 @@ def plot_scores(df: pd.DataFrame):
 
 def main():
     sidebar.show_sidebar()
-
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
-    
     if st.session_state.logged_in:
         st.markdown("# Theo dõi thông tin sức khỏe của bạn")
 
         df  = load_scores(file=APP_CONFIG.scores_file_path, 
-                          spesific_username=st.session_state.user_name)
+                          spesific_username=st.session_state.username)
 
         if not df.empty:
             df['Time'] = pd.to_datetime(df['Time'])

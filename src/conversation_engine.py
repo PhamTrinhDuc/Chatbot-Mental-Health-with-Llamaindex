@@ -49,7 +49,7 @@ def save_score(score: str, content: str, total_guess: str, username: str) -> Non
         "username": username,
         "Time": curent_time,
         "Score": score,
-        "Contetn": content,
+        "Content": content,
         "Total Guess": total_guess
     }
 
