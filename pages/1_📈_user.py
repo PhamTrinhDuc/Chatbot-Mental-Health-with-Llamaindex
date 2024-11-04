@@ -5,7 +5,7 @@ import pandas as pd
 from datetime import datetime
 import plotly.graph_objects as go
 from ui import sidebar
-from configs.config import APP_CONFIG
+from configs.config import LoadConfig
 
 st.set_page_config(layout="wide")
 
@@ -88,7 +88,7 @@ def main():
     if st.session_state.logged_in:
         st.markdown("# Theo dõi thông tin sức khỏe của bạn")
 
-        df  = load_scores(file=APP_CONFIG.scores_file_path, 
+        df  = load_scores(file=LoadConfig.scores_file_path, 
                           spesific_username=st.session_state.username)
 
         if not df.empty:

@@ -96,15 +96,15 @@ def create_retriever() -> RetrieverQueryEngine:
         index=index,
         similarity_top_k=3,
     )
-    response_synthetizer = get_response_synthesizer(
-        response_mode="tree_summarize",
-        verbose=False
-    )
-    post_process = SimilarityPostprocessor(similarity_cutoff=0.5)
+    # response_synthetizer = get_response_synthesizer(
+    #     response_mode="tree_summarize",
+    #     verbose=False
+    # )
+    # post_process = SimilarityPostprocessor(similarity_cutoff=0.5)
     dsm5_engine = RetrieverQueryEngine(
         retriever=retriever,
-        response_synthesizer=response_synthetizer,
-        node_postprocessors=[post_process]
+        # response_synthesizer=response_synthetizer,
+        # node_postprocessors=[post_process]
 
     )
     return dsm5_engine
@@ -163,7 +163,19 @@ def chat_interface(agent: OpenAIAgent, chat_store: SimpleChatStore, container) -
         with container:
             with st.chat_message(name="assistant", avatar=PROFESSOR_AVT):
                 st.markdown("Chào bạn, mình là Chatbot MENTHAL HEALTH được phát triển bởi PTIT. Mình sẽ giúp bạn chăm sóc sức khỏe tinh thần. Hãy cho mình biết tình trạng của bạn hoặc bạn có thể trò chuyện với mình nhé!")
-    
+    if st.session_state.logged_in:
+        username = st.session_state.username
+        user_info = st.session_state.user_info
+        st.subheader("💬 LLAMA-INDEX MENTAL HEALTH")
+        container = st.container()
+        chat_history = load_chat_history()
+        chatbot = initlize_chatbot(chat_store=chat_history, 
+                                   container=st.container(), 
+                                   username=username, 
+                                   user_info=user_info)
+        chat_interface(agent=chatbot, 
+                       chat_store=chat_history, 
+                       container=container)
     user_input = st.text_input("Nhập tin nhắn của bạn tại đây...",)
     if user_input:
         with container:

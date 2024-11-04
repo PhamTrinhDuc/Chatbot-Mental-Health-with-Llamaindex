@@ -14,9 +14,13 @@ def main():
         st.subheader("💬 LLAMA-INDEX MENTAL HEALTH")
         container = st.container()
         chat_history = load_chat_history()
-        chatbot = initlize_chatbot(chat_store=chat_history, container=st.container(), 
-                                   username=username, user_info=user_info)
-        chat_interface(agent=chatbot, chat_store=chat_history, container=container)
+        chatbot = initlize_chatbot(chat_store=chat_history, 
+                                   container=st.container(), 
+                                   username=username, 
+                                   user_info=user_info)
+        chat_interface(agent=chatbot, 
+                       chat_store=chat_history, 
+                       container=container)
 
 if __name__ == "__main__":
     main()
