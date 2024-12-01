@@ -5,6 +5,7 @@ from ui.sidebar import show_sidebar
 
 def main():
     show_sidebar()
+
     if "logged_in" not in st.session_state:
         st.session_state.logged_in = False
     
@@ -12,12 +13,13 @@ def main():
         username = st.session_state.username
         user_info = st.session_state.user_info
         st.subheader("💬 LLAMA-INDEX MENTAL HEALTH")
-        container = st.container()
         chat_history = load_chat_history()
+        container = st.container()
         chatbot = initlize_chatbot(chat_store=chat_history, 
-                                   container=st.container(), 
+                                   container=container, 
                                    username=username, 
                                    user_info=user_info)
+        
         chat_interface(agent=chatbot, 
                        chat_store=chat_history, 
                        container=container)

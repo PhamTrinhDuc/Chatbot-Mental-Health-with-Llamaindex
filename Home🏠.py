@@ -25,7 +25,6 @@ def main():
             with guest_tab:
                 guest_login()
     else:
-        
         col1, col2 = st.columns(2)
         with col1:
             st.image("./images/chat.jpeg")

@@ -3,9 +3,9 @@ from typing import List, Dict
 import yaml
 import hashlib
 import os
-from configs.config import APP_CONFIG
+from configs.config import Config
 
-USERS_FILE = APP_CONFIG.user_file_path
+USERS_FILE = Config.user_file_path
 
 def load_user_data():
     """
