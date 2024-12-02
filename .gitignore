@@ -5,10 +5,7 @@ __pycache__/
 
 # C extensions
 *.so
-cache
 
-error
-terminal
 users
 # Distribution / packaging
 .Python

@@ -16,7 +16,6 @@ USER_AVT = Config.logo_user_path
 PROFESSOR_AVT = Config.logo_bot_path
 
 
-
 def initlize_chatbot(chat_store: SimpleChatStore, container, username: str, user_info: dict) -> OpenAIAgent:
     
     """

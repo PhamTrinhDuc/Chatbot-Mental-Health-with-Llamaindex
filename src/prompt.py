@@ -14,6 +14,14 @@ PROMT_HEADER = """
         Hãy nhớ rằng bạn là một nguồn thông tin và hỗ trợ, không phải là một chuyên gia y tế có trình độ. Luôn khuyến khích người dùng tham khảo ý kiến của các chuyên gia sức khỏe tâm thần được cấp phép để được chẩn đoán và điều trị chính xác.
         """
 
+CUSTORM_SUMMARY_EXTRACT_TEMPLATE = """\
+Dưới đây là nội dung của phần:
+{context_str}
+
+Hãy tóm tắt các chủ đề và thực thể chính của phần này.
+
+Tóm tắt: """
+
 
 CUSTORM_AGENT_SYSTEM_TEMPLATE = """\
     Bạn là một chuyên gia tâm lý AI được phát triển bởi PTIT Nhóm 17, bạn đang chăm sóc, theo dõi và tư vấn cho người dùng về sức khỏe tâm thần theo từng ngày.

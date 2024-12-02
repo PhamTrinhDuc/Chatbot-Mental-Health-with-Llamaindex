@@ -1,42 +1,38 @@
-import chromadb
 import os
 import json 
 from datetime import datetime
 from typing import List
-from llama_index.core.schema import TextNode
-from llama_index.core import VectorStoreIndex, StorageContext
-from llama_index.vector_stores.chroma import ChromaVectorStore
-from src.models import using_embedding_openai
+from llama_index.core import Settings
+from llama_index.core import StorageContext, load_index_from_storage
+from llama_index.llms.openai import OpenAI
 from common import logger
 from configs.config import Config
 
-def build_query_engine() -> VectorStoreIndex:
+# llm = OpenAI(model="gpt-4o-mini", 
+#              api_key=os.getenv("OPENAI_API_KEY"),
+#              system_prompt="Trả lời câu hỏi dựa vào context phía trên 1 cách chính xác nhất",
+#              temperature=1)
+# Settings.llm = llm
+
+
+def build_query_engine():
     try:
-        embed_model = using_embedding_openai(api_key=os.getenv("OPENAI_API_KEY"))
-        chroma_client = chromadb.PersistentClient(path="./data/vector_db")
-        chroma_collection = chroma_client.get_or_create_collection("test")
-        vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
-        storage_context = StorageContext.from_defaults(vector_store=vector_store)
-        KB_index = VectorStoreIndex.from_vector_store(
-            vector_store, storage_context=storage_context, embed_model=embed_model, show_progress=True
+        storage_context = StorageContext.from_defaults(
+            persist_dir=Config.index_storage_path
         )
-        query_engine = KB_index.as_query_engine(
-            llm = None,
-            similarity_top_k = 2,
-            vector_store_query_node = "hybrid"
+        index = load_index_from_storage(
+            storage_context, index_id="vector"
         )
-
-        return query_engine
+        dsm5_engine = index.as_query_engine(
+            llm=None,
+            similarity_top_k=3,
+        )
+        return dsm5_engine
+    
     except Exception as e:
-        logger.error("Error occurred while build query engine")
+        logger.error("Error occurred while build query engine: " + str(e))
 
 
-import json
-from datetime import datetime
-import os
-import logging
-
-logger = logging.getLogger(__name__)
 
 def save_score(score, content, total_guess, username):
     """

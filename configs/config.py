@@ -9,6 +9,8 @@ Settings.llm = OpenAI(model="gpt-4o-mini")
 class Config:
     # data
     data_path: str = "data/dsm-5-cac-tieu-chuan-chan-doan.docx"
+    cache_data_path: str = "data/cache/pipeline_cache.json"
+    index_storage_path: str = "data/index_storage"
     # history
     conversation_file: str = "data/history/converstion.json"
     # storage vdb
