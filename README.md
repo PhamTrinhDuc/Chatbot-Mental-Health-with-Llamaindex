@@ -12,7 +12,7 @@
 </div>
 
 
-## ** To Install This Application, Follow These Steps:**
+## **To Install This Application, Follow These Steps:**
 
 #### Step 1. Clone the repository:
     git clone https://github.com/PhamTrinhDuc/Chatbot-Mental-Health-with-Llamaindex.git
