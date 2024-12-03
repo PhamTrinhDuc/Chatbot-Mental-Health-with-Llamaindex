@@ -1,11 +1,14 @@
 import os
 import dotenv
+from dataclasses import dataclass
 from llama_index.core import Settings
 from llama_index.llms.openai import OpenAI
 dotenv.load_dotenv()
 os.environ['OPENAI_API_KEY'] = os.getenv('OPENAI_API_KEY')
 Settings.llm = OpenAI(model="gpt-4o-mini")
 
+
+@dataclass
 class Config:
     # data
     data_path: str = "data/dsm-5-cac-tieu-chuan-chan-doan.docx"

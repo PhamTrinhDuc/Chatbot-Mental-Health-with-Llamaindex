@@ -8,7 +8,7 @@ from llama_index.core.tools import FunctionTool
 from src.models import using_llm_openai
 from src.prompt import CUSTORM_AGENT_SYSTEM_TEMPLATE
 from src.tools import build_query_engine, save_score
-from common import display_message, load_chat_history
+from common import display_message
 from configs.config import Config
 
 CONVERSATION_FILE = Config.conversation_file
@@ -16,7 +16,10 @@ USER_AVT = Config.logo_user_path
 PROFESSOR_AVT = Config.logo_bot_path
 
 
-def initlize_chatbot(chat_store: SimpleChatStore, container, username: str, user_info: dict) -> OpenAIAgent:
+def initlize_chatbot(chat_store: SimpleChatStore, 
+                     container, 
+                     username: str, 
+                     user_info: dict) -> OpenAIAgent:
     
     """
     Xây dựng tool truy vấn từ cơ sở dữ liệu và tool lưu trữ kết quả chẩn đoán từ đó tạo agent để trò chuyện với người dùng.

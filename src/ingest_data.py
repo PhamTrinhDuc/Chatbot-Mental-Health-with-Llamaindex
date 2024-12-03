@@ -36,7 +36,8 @@ def ingest_documents(data_path: str = None):
                 chunk_size=512, 
                 chunk_overlap=20
             ),
-            SummaryExtractor(summaries=['self'], prompt_template=CUSTORM_SUMMARY_EXTRACT_TEMPLATE),
+            SummaryExtractor(summaries=['self'], 
+                             prompt_template=CUSTORM_SUMMARY_EXTRACT_TEMPLATE),
             OpenAIEmbedding()
         ],
         cache=cached_hashes

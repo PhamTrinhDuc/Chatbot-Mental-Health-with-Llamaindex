@@ -1,18 +1,9 @@
 import os
 import json 
 from datetime import datetime
-from typing import List
-from llama_index.core import Settings
 from llama_index.core import StorageContext, load_index_from_storage
-from llama_index.llms.openai import OpenAI
 from common import logger
 from configs.config import Config
-
-# llm = OpenAI(model="gpt-4o-mini", 
-#              api_key=os.getenv("OPENAI_API_KEY"),
-#              system_prompt="Trả lời câu hỏi dựa vào context phía trên 1 cách chính xác nhất",
-#              temperature=1)
-# Settings.llm = llm
 
 
 def build_query_engine():
@@ -34,7 +25,7 @@ def build_query_engine():
 
 
 
-def save_score(score, content, total_guess, username):
+def save_score(score: str, content: str, total_guess: str, username:str) -> None:
     """
     Hàm để lưu kết quả chẩn đoán của người dùng
     """

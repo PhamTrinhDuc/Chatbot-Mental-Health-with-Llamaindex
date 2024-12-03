@@ -33,7 +33,7 @@ def using_llm_groq(
                    "llama-3.1-70b-versatile", 
                    "llava-v1.5-7b-4096-preview", 
                    "gemma2-9b-it", 
-                   "mixtral-8x7b-32768",] = "llama-3.1-70b-versatile",):
+                   "mixtral-8x7b-32768",] = "llama-3.1-70b-versatile",) -> Groq:
     try:
         if api_key:
             os.environ['GROQ_API_KEY'] = api_key

@@ -3,9 +3,9 @@ import json
 import streamlit as st
 import pandas as pd
 from datetime import datetime
-import plotly.graph_objects as go
-from ui.sidebar import show_sidebar 
 from configs.config import Config
+import plotly.graph_objects as go
+from ui.sidebar import show_sidebar
 
 st.set_page_config(layout="wide")
 
@@ -85,6 +85,7 @@ def main():
 
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
+        
     if st.session_state.logged_in:
         # Tạo giao diện với Streamlit
         st.markdown('# Theo dõi thông tin sức khỏe của bạn')

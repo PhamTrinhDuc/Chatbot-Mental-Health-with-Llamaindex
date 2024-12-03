@@ -1,6 +1,7 @@
 import streamlit as st
 from typing import List, Dict
-from src import initlize_chatbot, chat_interface, load_chat_history
+from src import initlize_chatbot, chat_interface
+from common.utils import load_chat_history
 from ui.sidebar import show_sidebar 
 
 def main():
