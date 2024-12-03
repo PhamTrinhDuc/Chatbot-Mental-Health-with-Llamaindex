@@ -76,7 +76,6 @@ def plot_scores(df):
         yaxis=dict(tickvals=[1, 2, 3, 4], ticktext=['kém', 'trung bình', 'khá', 'tốt']),
         hovermode='x unified'
     )
-
     # Sử dụng Streamlit để hiển thị biểu đồ
     st.plotly_chart(fig)
     
