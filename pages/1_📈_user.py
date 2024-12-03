@@ -10,7 +10,7 @@ from ui.sidebar import show_sidebar
 st.set_page_config(layout="wide")
 
 # Hàm đọc dữ liệu từ file JSON
-def load_scores(file, specific_username):
+def load_scores(file: str, specific_username: str):
     if os.path.exists(file) and os.path.getsize(file) > 0:
         with open(file, 'r') as f:
             data = json.load(f)
