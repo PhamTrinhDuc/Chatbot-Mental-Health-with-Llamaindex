@@ -13,7 +13,7 @@ def main():
     if st.session_state.logged_in:
         username = st.session_state.username
         user_info = st.session_state.user_info
-        st.subheader("💬 LLAMA-INDEX MENTAL HEALTH")
+        st.subheader("💬 Trò chuyện với chuyên gia tâm lý AI")
         chat_history = load_chat_history()
         container = st.container()
         chatbot = initlize_chatbot(chat_store=chat_history, 

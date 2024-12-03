@@ -85,10 +85,10 @@ def main():
 
     if 'logged_in' not in st.session_state:
         st.session_state.logged_in = False
-        
+
     if st.session_state.logged_in:
         # Tạo giao diện với Streamlit
-        st.markdown('# Theo dõi thông tin sức khỏe của bạn')
+        # st.markdown('# Theo dõi thông tin sức khỏe của bạn')
         
         # Lấy dữ liệu từ file
         df = load_scores(Config.scores_file_path, st.session_state.username)
